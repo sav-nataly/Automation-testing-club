@@ -9,15 +9,17 @@ package com.example.opptasks.task5
 class Person {
     var name: String = "Default name"
         set(value) {
-            if (value.isNotEmpty() && value != field) // проверка, что имя не пустая строка и изменилось относительно текущего
+            if (value.isNotEmpty() && value != field) { // проверка, что имя не пустая строка и изменилось относительно текущего
                 field = value
+            }
         }
         get() = field
 
     var age: Int = 0
         set(value) {
-            if (value > 0) // проверка, что возраст неотрицательный
+            if (value > 0) {// проверка, что возраст неотрицательный
                 field = value
+            }
         }
         get() = field
 

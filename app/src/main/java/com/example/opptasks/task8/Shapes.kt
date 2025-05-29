@@ -15,17 +15,21 @@ class Circle(val radius: Double) : Shape() { // в конструкторе пе
     }
 }
 
-class Rectangle(val side: Double) : Shape() { // в конструкторе передается сторона
+class Rectangle(val sideA: Double, val sideB: Double) : Shape() { // в конструкторе передаются стороны
     override fun area(): Double {
-        return side * side
+        return sideA * sideB
     }
 }
 
 fun oopTask8() {
     val circle = Circle(10.0)
-    val rectangle = Rectangle(20.0)
+    val rectangle = Rectangle(20.0, 5.0)
 
     println(circle.area()) // 314.1592653589793
-    println(rectangle.area()) // 400.0
+    println(rectangle.area()) // 100.0
+}
+
+fun main() {
+    oopTask8()
 }
 
