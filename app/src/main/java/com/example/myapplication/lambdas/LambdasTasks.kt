@@ -3,67 +3,60 @@ package com.example.myapplication.lambdas
 import kotlin.math.pow
 
 /**
- * Создайте список чисел от 1 до 10,
+ * 1. Создайте список чисел от 1 до 10,
  * затем используйте метод filter чтобы оставить только четные числа.
  * После этого используйте метод map чтобы умножить каждое число на 2.
  */
 fun lambdasTask1() {
     val intList = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+    val resultList = intList.filter { it % 2 == 0 }.map { it * 2 }
 
-    val evenList = intList.filter { it % 2 == 0 }
-
-    val doubleList = evenList.map { it * 2 }
-
-    println(evenList)
-    println(doubleList)
+    println(resultList) // [4, 8, 12, 16, 20]
 }
 
-
 /**
- * Создайте список строк ["один", "два", "три", "четыре", "пять"].
+ * 2. Создайте список строк ["один", "два", "три", "четыре", "пять"].
  * Используйте map чтобы получить длину каждого элемента списка.
  */
 fun lambdasTask2() {
     val stringList = listOf("один", "два", "три", "четыре", "пять")
-
     val lengthList = stringList.map { it.length }
 
-    println(lengthList)
+    println(lengthList) // [4, 3, 3, 6, 4]
 }
 
 /**
- * Напишите функцию высшего порядка, которая принимает два параметра:
+ * 3. Напишите функцию высшего порядка, которая принимает два параметра:
  * целое число и функцию, принимающую целое число и возвращающую строку.
  * Эта функция должна преобразовывать число в строку с помощью переданной функции
  * и возвращать результат.
  */
 fun lambdasTask3() {
-    println(task3Fun(123) { a: Int -> a.toString() })
+    println(task3HigherOrderFun(123) { a: Int -> a.toString() }) // 123
 }
 
-fun task3Fun(i: Int, operation: (Int) -> String): String {
+fun task3HigherOrderFun(i: Int, operation: (Int) -> String): String {
     return operation(i)
 }
 
 /**
- * Создайте лямбда-функцию, которая принимает число и возвращает его квадрат.
+ * 4. Создайте лямбда-функцию, которая принимает число и возвращает его квадрат.
  * Используйте эту лямбда-функцию в другой функции, которая принимает число и возвращает строку,
  * состоящую из числа и его квадрата (например, “5 и его квадрат равен 25”).
  */
-val task4Lambda = { a: Double -> a.pow(2)}
-val task41Lambda = { a: Double -> "$a и его квадрат равен ${task4Lambda(a)}"}
+val task4SquareLambda = { a: Double -> a.pow(2) }
+val task4StringLambda = { a: Double -> "$a и его квадрат равен ${task4SquareLambda(a)}" }
 
 fun lambdasTask4() {
-    println(task41Lambda(5.9))
+    println(task4StringLambda(5.9)) // 5.9 и его квадрат равен 34.81
 }
 
-
 /**
- * Создайте объект класса Person со свойствами name и age.
+ * 5. Создайте объект класса Person со свойствами name и age.
  * Создайте список из нескольких таких объектов.
  * Используйте filter и map чтобы получить список имен тех людей, которым больше 18 лет.
  */
-class Person(val name: String, val age: Int) {}
+class Person(val name: String, val age: Int)
 
 fun lambdasTask5() {
     val people = listOf(
@@ -73,14 +66,13 @@ fun lambdasTask5() {
         Person("James", 45),
         Person("George", 9),
     )
-
     val adults = people.filter { it.age > 18 }.map { it.name }
 
-    println(adults)
+    println(adults) // [Noah, Jack, James]
 }
 
 /**
- * Используя ленивые операции, создайте последовательность чисел от 1 до 1000,
+ * 6. Используя ленивые операции, создайте последовательность чисел от 1 до 1000,
  * затем используйте filter чтобы оставить только числа, делящиеся на 5,
  * затем map чтобы умножить каждое число на 2,
  * и take чтобы взять первые 20 элементов этой последовательности.
@@ -88,16 +80,26 @@ fun lambdasTask5() {
 fun lambdasTask6() {
     val sequence = sequence {
         var num = 1
-        while (num <= 100) {
-            yield(num++) // TODO узнать что такое yield
+        while (num <= 1000) {
+            yield(num++)
+            // сначала возвращается num
+            // при следующем вызове уже возвразается num увеличивается и возвращается num + 1
         }
-    }.filter { it % 5 == 0 }.map { it * 2 }
-
-    println(sequence.take(20).toList())
+    }
+        .filter { it % 5 == 0 }
+        .map { it * 2 }
+    /**
+     * filter и map применяются к каждому элементу последовательности
+     * т.е получили элемент -> он прошел через filter и map -> получили следующий элемент
+     * если бы был список (не последовательность), то filter и map применялись ко всему списку сразу
+     */
+    println(
+        sequence.take(20).toList()
+    ) // [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200]
 }
 
 /**
- * Создайте класс Car с полями make, model и year.
+ * 7. Создайте класс Car с полями make, model и year.
  * Создайте коллекцию из нескольких объектов этого класса
  * и используйте groupBy чтобы сгруппировать машины по году выпуска.
  */
@@ -111,12 +113,13 @@ fun lambdasTask7() {
         Car("Ford", "F-Series", "2001"),
         Car("Honda", "CR-V", "2005"),
     )
-
     println(cars.groupBy { it.year })
+    // keySelector (Car) -> String, получаем мапу Map<String, List<Car>>
+    // в мапе 2001 -> [Corolla, Rav4, F-Series], 2003 -> [Model Y], 2005 -> [CR-V]
 }
 
 /**
- * Создайте переменную lazyValue типа String, инициализируемую лениво.
+ * 8. Создайте переменную lazyValue типа String, инициализируемую лениво.
  * Проверьте, что инициализация действительно происходит только при первом обращении к переменной.
  */
 fun lambdasTask8() {
@@ -125,42 +128,40 @@ fun lambdasTask8() {
         "value"
     }
 
-    println(lazyValue)
-    println(lazyValue)
+    println(lazyValue) // Initialization\nvalue
+    println(lazyValue) // value
 }
 
 /**
- * Создайте функцию высшего порядка calculate, которая принимает два целых числа и функцию операции.
+ * 9. Создайте функцию высшего порядка calculate, которая принимает два целых числа и функцию операции.
  * Продемонстрируйте использование calculate с разными операциями (сложение, вычитание, умножение).
- *
  */
-
 fun calculate(a: Int, b: Int, operation: (Int, Int) -> Int): Int {
     return operation(a, b)
 }
 
-val sum = {a: Int, b: Int -> a + b}
-val sub = {a: Int, b: Int -> a - b}
-val mul = {a: Int, b: Int -> a * b}
+val sum = { a: Int, b: Int -> a + b }
+val sub = { a: Int, b: Int -> a - b }
+val mul = { a: Int, b: Int -> a * b }
 
 fun lambdasTask9() {
-    println(calculate(1, 2, sum))
-    println(calculate(1, 2, sub))
-    println(calculate(1, 20, mul))
+    println(calculate(1, 2, sum)) // 3
+    println(calculate(1, 2, sub)) // -1
+    println(calculate(1, 20, mul)) // 20
 }
 
 /**
- * Создайте коллекцию чисел и используйте fold или reduce
+ * 10. Создайте коллекцию чисел и используйте fold или reduce
  * чтобы посчитать их сумму, минимальное и максимальное значения.
  */
 fun lambdasTask10() {
     val intList = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
-    val listSum = intList.fold(0) { acc, i -> acc + i}
-    val listMax = intList.reduce { acc, i -> if (i > acc) i else acc}
-    val listMin = intList.reduce { acc, i -> if (i < acc) i else acc}
+    val listSum = intList.fold(0) { acc, i -> acc + i }
+    val listMax = intList.reduce { acc, i -> if (i > acc) i else acc }
+    val listMin = intList.reduce { acc, i -> if (i < acc) i else acc }
 
-    println(listSum)
-    println(listMax)
-    println(listMin)
+    println(listSum) // 55
+    println(listMax) // 10
+    println(listMin) // 1
 }
