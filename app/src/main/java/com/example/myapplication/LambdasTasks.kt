@@ -1,4 +1,4 @@
-package com.example.myapplication.lambdas
+package com.example.myapplication
 
 import kotlin.math.pow
 
@@ -32,10 +32,10 @@ fun lambdasTask2() {
  * и возвращать результат.
  */
 fun lambdasTask3() {
-    println(task3HigherOrderFun(123) { a: Int -> a.toString() }) // 123
+    println(task3HigherOrderFun(123) { it.toString() }) // 123
 }
 
-fun task3HigherOrderFun(i: Int, operation: (Int) -> String): String {
+fun task3HigherOrderFun(i: Int, operation: (Int) -> String): String { // функция высшего порядка
     return operation(i)
 }
 
@@ -44,8 +44,9 @@ fun task3HigherOrderFun(i: Int, operation: (Int) -> String): String {
  * Используйте эту лямбда-функцию в другой функции, которая принимает число и возвращает строку,
  * состоящую из числа и его квадрата (например, “5 и его квадрат равен 25”).
  */
-val task4SquareLambda = { a: Double -> a.pow(2) }
-val task4StringLambda = { a: Double -> "$a и его квадрат равен ${task4SquareLambda(a)}" }
+val task4SquareLambda = { a: Double -> a.pow(2) } // лямбда, возвращающая квадрат
+val task4StringLambda =
+    { a: Double -> "$a и его квадрат равен ${task4SquareLambda(a)}" } // лямбда, возвращающая строку
 
 fun lambdasTask4() {
     println(task4StringLambda(5.9)) // 5.9 и его квадрат равен 34.81
@@ -56,7 +57,7 @@ fun lambdasTask4() {
  * Создайте список из нескольких таких объектов.
  * Используйте filter и map чтобы получить список имен тех людей, которым больше 18 лет.
  */
-class Person(val name: String, val age: Int)
+class Person(val name: String, val age: Int) // объявление класса Person
 
 fun lambdasTask5() {
     val people = listOf(
@@ -83,7 +84,7 @@ fun lambdasTask6() {
         while (num <= 1000) {
             yield(num++)
             // сначала возвращается num
-            // при следующем вызове уже возвразается num увеличивается и возвращается num + 1
+            // при следующем вызове уже num увеличивается и возвращается num + 1
         }
     }
         .filter { it % 5 == 0 }
@@ -114,7 +115,7 @@ fun lambdasTask7() {
         Car("Honda", "CR-V", "2005"),
     )
     println(cars.groupBy { it.year })
-    // keySelector (Car) -> String, получаем мапу Map<String, List<Car>>
+    // it.year аналогично car: Car -> car.year, получаем мапу Map<String, List<Car>>
     // в мапе 2001 -> [Corolla, Rav4, F-Series], 2003 -> [Model Y], 2005 -> [CR-V]
 }
 
@@ -124,7 +125,7 @@ fun lambdasTask7() {
  */
 fun lambdasTask8() {
     val lazyValue: String by lazy {
-        println("Initialization")
+        println("Initialization") // для проверки ленивой инициализации
         "value"
     }
 
@@ -157,11 +158,18 @@ fun lambdasTask9() {
 fun lambdasTask10() {
     val intList = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
-    val listSum = intList.fold(0) { acc, i -> acc + i }
-    val listMax = intList.reduce { acc, i -> if (i > acc) i else acc }
-    val listMin = intList.reduce { acc, i -> if (i < acc) i else acc }
+    val listSum =
+        intList.fold(0) { acc, i -> acc + i } // к acc добавляется каждый i, начальное значение 0
+    val listMax =
+        intList.reduce { acc, i -> if (i > acc) i else acc } // в acc хранится наибольшее число, с ним сравнивается каждый следующий и записывается в acc, если i > acc
+    val listMin =
+        intList.reduce { acc, i -> if (i < acc) i else acc } // в acc хранится наименьшее число, с ним сравнивается каждый следующий и записывается в acc, если i < acc
 
     println(listSum) // 55
     println(listMax) // 10
     println(listMin) // 1
+}
+
+fun main() {
+    lambdasTask10()
 }
