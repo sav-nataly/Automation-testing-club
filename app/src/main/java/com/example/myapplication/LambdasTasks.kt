@@ -169,7 +169,3 @@ fun lambdasTask10() {
     println(listMax) // 10
     println(listMin) // 1
 }
-
-fun main() {
-    lambdasTask10()
-}
